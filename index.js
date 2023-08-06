@@ -1,16 +1,18 @@
 const fs = require('fs');
 const inquirer = require('inquirer');
-// const shapes = require('./util/shapes');
+const shapes = require('./lib/shapes');
+const { Circle, Square, Triangle } = require('./lib/shapes');
 
 class SVG {
-  constructor(name, textColor, shape, shapeColor) {
+  constructor(name, textColor) {
     this.name = name;
     this.textColor = textColor;
-    this.shape = shape;
-    this.shapeColor = shapeColor;
   }
-  render() {
-    return `<svg version="1.1" width="300" height="200" xmlns="http://www.w3.org/2000/svg">`
+  fileRender() {
+    return `<svg version="1.1" width="300" height="200" xmlns="http://www.w3.org/2000/svg">` 
+  }
+  textRender() {
+    return `<text x="150" y="100" font-size="60" text-anchor="middle" fill="${this.textColor}">${this.name}</text></svg>`
   }
 }
 
@@ -19,7 +21,7 @@ class SVG {
 inquirer.prompt( [
   {
     type: 'input',
-    message: 'What is your company name',
+    message: 'What is your company name (3 characters max)',
     name: 'name',
   },
   {
@@ -41,8 +43,27 @@ inquirer.prompt( [
 ])
 .then((response) =>{
   console.log(response)
-  const svg = new SVG(response.name, response.textColor, response.shape, response.shapeColor)
+  let trimname = response.name.trim().slice(0,3);
+
+
+  const svg = new SVG(trimname, response.textColor)
   console.log(svg)
+
+
+
+  if(response.shape === 'circle') {
+    var shape = new Circle(response.shapeColor);
+  } else if (response.shape === 'square') {
+    var shape = new Square.render(response.shapeColor);
+  }
+ else if (response.shape === 'triangle') {
+  var shape = new Triangle.render(response.shapeColor);
+  }
+
+  let logo = svg.fileRender() + shape.render() + svg.textRender();
+
+  fs.writeFile('./output/logo.svg', logo, (err) => 
+  err ? console.error(err) : console.log('Shape generated!') )
 
 })
 
@@ -66,6 +87,14 @@ inquirer.prompt( [
       //  fs.writeFile('./output/logo.svg', shapes(response), (err) => 
       //  err ? console.error(err) : console.log('Shape generated!') )
   
-function fileCreate(data) {
-  console.log(data);
-}
+// function fileCreate(data) {
+//   console.log(data);
+// }
+
+/* <svg version="1.1" width="300" height="200" xmlns="http://www.w3.org/2000/svg">
+
+<circle cx="150" cy="100" r="80" fill="green" />
+
+<text x="150" y="125" font-size="60" text-anchor="middle" fill="white">SVG</text>
+
+</svg> */

@@ -1,0 +1,15 @@
+{
+  "name": "homeworkeight",
+  "version": "1.0.0",
+  "description": "this is the homework for week 10 OOP",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "inquirer": "^8.2.4",
+    "jest": "24.9.0"
+  }
+}
